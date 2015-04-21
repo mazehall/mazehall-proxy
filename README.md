@@ -1,5 +1,7 @@
 # Mazehall Proxy
 
+SECURITY HINT: never ever use the proxy in production WITHOUT a firewall restriction to the websocket registration port - default 3300.
+
 ## Description
 
 Mazehall-proxy is a dynamic reverse proxy.
@@ -29,7 +31,7 @@ All configuration options of [redbird][redbird] are covered.
 
 ### Reference
 
-#### MazehallProxy(opts)
+#### MazehallProxy.Server(opts)
 
 This is the Proxy constructor. Creates a new Proxy and starts listening to
 the given ports. 
@@ -72,6 +74,8 @@ __Arguments__
 
 ## Roadmap
 
+* add security methods to the registration process
+* add client helper
 * fix websockets in balancing scenarios
 
 [redbird]: https://github.com/OptimalBits/redbird
