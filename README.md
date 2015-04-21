@@ -1,5 +1,7 @@
 # Mazehall Proxy
 
+SECURITY HINT: never ever use the proxy in production WITHOUT a firewall restriction to the websocket registration port - default 3300.
+
 ## Description
 
 Mazehall-proxy is a dynamic reverse proxy.
@@ -13,9 +15,11 @@ Mazehall-proxy is a dynamic reverse proxy.
 * multi hosts and multi backends ready
 * Environment variables for docker friendly usage
 
+
+```javascript
     var Proxy = require('mazehall-proxy');
     Proxy.Server({port: 80});
-
+```
 
 ## Installation
 
@@ -29,11 +33,11 @@ All configuration options of [redbird][redbird] are covered.
 
 ### Reference
 
-<a name="redbird"/>
-####Redbird(opts)
+#### MazehallProxy.Server(opts)
 
 This is the Proxy constructor. Creates a new Proxy and starts listening to
-the given port.
+the given ports. 
+Default proxy: 8080, ws-server: 3300
 
 __Arguments__
 
@@ -72,6 +76,8 @@ __Arguments__
 
 ## Roadmap
 
+* add security methods to the registration process
+* add client helper
 * fix websockets in balancing scenarios
 
 [redbird]: https://github.com/OptimalBits/redbird
