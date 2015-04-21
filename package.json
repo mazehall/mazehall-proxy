@@ -1,0 +1,33 @@
+{
+  "name": "mazehall-proxy",
+  "version": "0.1.0",
+  "description": "Dynamic reverse proxy",
+  "main": "index.js",
+  "mazehall": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mazehall/mazehall-proxy.git"
+  },
+  "keywords": [
+    "proxy",
+    "mazehall",
+    "plugin"
+  ],
+  "author": "Jens Klose <jens.klose@mazehall.com>",
+  "license": "MIT",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-coffee": "^2.3.1",
+    "gulp-watch": "^4.2.4"
+  }
+}
