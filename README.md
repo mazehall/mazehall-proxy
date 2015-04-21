@@ -29,11 +29,11 @@ All configuration options of [redbird][redbird] are covered.
 
 ### Reference
 
-<a name="redbird"/>
-####Redbird(opts)
+#### MazehallProxy(opts)
 
 This is the Proxy constructor. Creates a new Proxy and starts listening to
-the given port.
+the given ports. 
+Default proxy: 8080, ws-server: 3300
 
 __Arguments__
 
