@@ -15,9 +15,11 @@ Mazehall-proxy is a dynamic reverse proxy.
 * multi hosts and multi backends ready
 * Environment variables for docker friendly usage
 
+
+```javascript
     var Proxy = require('mazehall-proxy');
     Proxy.Server({port: 80});
-
+```
 
 ## Installation
 
