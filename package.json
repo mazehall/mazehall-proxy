@@ -1,17 +1,18 @@
 {
   "name": "mazehall-proxy",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Dynamic reverse proxy",
   "main": "index.js",
-  "mazehall": true,
   "repository": {
     "type": "git",
     "url": "git@github.com:mazehall/mazehall-proxy.git"
   },
   "keywords": [
     "proxy",
-    "mazehall",
-    "plugin"
+    "redbird",
+    "websocket",
+    "reverse",
+    "loadbalancer"
   ],
   "author": "Jens Klose <jens.klose@mazehall.com>",
   "license": "MIT",
@@ -33,6 +34,7 @@
   "dependencies": {
     "kefir": "^1.3.1",
     "redbird": "^0.4.2",
-    "socket.io": "^1.3.5"
+    "socket.io": "^1.3.5",
+    "socket.io-client": "^1.3.5"
   }
 }

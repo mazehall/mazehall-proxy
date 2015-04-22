@@ -1,7 +1,8 @@
-_r = require 'Kefir'
+_r = require 'kefir'
 Io = require 'socket.io'
 http = require 'http'
 Proxy = require 'redbird'
+wsEvents = require './events'
 
 testConnection = (target, cb) ->
   http.get(target, (res) ->
@@ -24,7 +25,9 @@ msgValidation = (msg) ->
     vdtn.valid = true
   vdtn
 
-
+###
+  @return Kefir.Observable
+###
 unregisterListener = (socket, proxy) ->
   _r.fromEvent socket, 'disconnect'
   .onValue () ->
@@ -33,19 +36,15 @@ unregisterListener = (socket, proxy) ->
 
 
 registerListener = (socket, proxy) ->
-  _r.fromEvent socket, MazehallProxy.REGISTER
+  _r.fromEvent socket, wsEvents.REGISTER
   .filter()
   .valuesToErrors (msg) ->
     validation = msgValidation msg
     {convert: !validation.valid, error: validation.err}
   .map (msg) ->
-    msg.target.host = msg.target.host || 'localhost';
-    msg.target.path = msg.target.path || '/';
+    msg.target = msg.target || 'localhost';
     return msg
-  #    target: {
-  #      host: host,
-  #      path: path
-  #    },
+  #    target: host
   #    port: port,
   #    addresses: []
   .map (x) ->
@@ -64,29 +63,24 @@ registerListener = (socket, proxy) ->
     .flatten()
     .flatMap (offer) ->
       _r.fromNodeCallback (cb) -> testConnection offer.backend, cb
-      .filter (status) ->
-        status < 500
-      .map (res) ->
+      .filter (httpStatus) ->
+        httpStatus < 500
+      .map ->
         offer
     .take 1
 
   .onValue (conn) ->
     socket.mazehallProxy ?= []
-    target = conn.target.host + conn.target.path
+    target = conn.target
     backend = conn.backend
-    console.log target
     proxy.register target, backend
     socket.mazehallProxy.push {target: target, backend: backend}
-    socket.emit MazehallProxy.MESSAGE, 'registered connection: ' + JSON.stringify(target) + ' -> ' + JSON.stringify(backend)
+    socket.emit wsEvents.MESSAGE, 'registered connection: ' + JSON.stringify(target) + ' -> ' + JSON.stringify(backend)
   .onError (err) ->
-    socket.emit MazehallProxy.ERROR, err.message || JSON.stringify err
+    socket.emit wsEvents.ERROR, err.message || JSON.stringify err
 
 
 class MazehallProxy
-  @HELLO: 'MAZEHALL:PROXY:HELLO'
-  @REGISTER: 'MAZEHALL:PROXY:REGISTER'
-  @MESSAGE: 'MAZEHALL:PROXY:MESSAGE'
-  @ERROR: 'MAZEHALL:PROXY:ERROR'
   @proxy
 
   constructor: (opts) ->
@@ -112,7 +106,7 @@ class MazehallProxy
   connectionListener: (ns) ->
     @sockets_ = _r.fromEvent(ns, 'connection')
     .onValue (socket) ->
-      socket.emit MazehallProxy.HELLO
+      socket.emit wsEvents.HELLO
 
       registerListener socket, MazehallProxy.proxy
       unregisterListener socket, MazehallProxy.proxy

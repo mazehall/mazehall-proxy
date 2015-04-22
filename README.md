@@ -57,12 +57,13 @@ __Arguments__
     		ca: caPath // Optional.
             redirect: true, // Disable HTTPS autoredirect to this route.
     	}
-        bunyan: {Object} Bunyan options. Check [bunyan](https://github.com/trentm/node-bunyan) for info.
-        If you want to disable bunyan, just set this option to false. Keep in mind that
-        having logs enabled incours in a performance penalty of about one order of magnitude per request.
+        bunyan: {Object} // Bunyan options. (DEFAULT: false) If you want to enable bunyan, just set this option.
 	}
 ```
 
+Check [bunyan](https://github.com/trentm/node-bunyan) for info.
+Keep in mind that having logs enabled incours in a performance penalty of about one order of magnitude per request.
+        
 ---------------------------------------
 #### MAZEHALL_PROXY_PORT
 ---------------------------------------
@@ -72,12 +73,27 @@ __Arguments__
 ---------------------------------------
 
 
+#### MazehallProxy.Client(server, hosts)
+
+This is the Client constructor. Creates a new Proxy-Client and starts listening to
+the server start event. If triggered then it starts a websocket client and registers 
+the public addresses and server port.
+
+__Arguments__
+
+```javascript
+    server, {Object} a http instance
+    hosts {String|Array} Hosts url
+```
+
+---------------------------------------
+MAZEHALL_PROXY_MASTER
+---------------------------------------
 
 
 ## Roadmap
 
 * add security methods to the registration process
-* add client helper
 * fix websockets in balancing scenarios
 
 [redbird]: https://github.com/OptimalBits/redbird
