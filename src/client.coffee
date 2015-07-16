@@ -1,23 +1,19 @@
 _r = require 'kefir'
 EVENTS = require './events'
 
-logStream_ = _r.bus()
-
 ProxyClient = (server, hosts) ->
-  _r.fromEvent server, 'listening'
+  _r.fromEvents server, 'listening'
   .onValue ->
     io = require 'socket.io-client'
     socket = io.connect process.env.MAZEHALL_PROXY_MASTER || 'ws://localhost:3300/proxy'
     socket.on 'connect', ->
-      logStream_.emit 'mazehall-proxy socket connected'
+      @log 'mazehall-proxy socket connected'
     socket.on EVENTS.HELLO, ->
       mazehallGridRegister server, socket, hosts
     socket.on EVENTS.MESSAGE, (x) ->
-      logStream_.emit 'message: ' + x
+      @log 'message: ' + x
     socket.on EVENTS.ERROR, (err) ->
       logStream_.error err
-
-  logStream_
 
 
 module.exports = ProxyClient

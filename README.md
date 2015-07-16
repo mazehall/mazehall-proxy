@@ -6,7 +6,7 @@ SECURITY HINT: never ever use the proxy in production WITHOUT a firewall restric
 
 Mazehall-proxy is a dynamic reverse proxy.
 
-* written in coffeescript -> javascript
+* written in coffee-script -> javascript
 * on top of [redbird proxy][redbird] -> http-proxy
 * websocket ready
 * dynamic registration over websockets
@@ -24,19 +24,19 @@ Mazehall-proxy is a dynamic reverse proxy.
 ## Installation
 
     npm install --save mazehall-proxy
-    
+
 
 
 ## Usage
 
 All configuration options of [redbird][redbird] are covered.
 
-### Reference
+## Reference
 
-#### MazehallProxy.Server(opts)
+### MazehallProxy.Server(opts)
 
 This is the Proxy constructor. Creates a new Proxy and starts listening to
-the given ports. 
+the given ports.
 Default proxy: 8080, ws-server: 3300
 
 __Arguments__
@@ -63,31 +63,49 @@ __Arguments__
 
 Check [bunyan](https://github.com/trentm/node-bunyan) for info.
 Keep in mind that having logs enabled incours in a performance penalty of about one order of magnitude per request.
-        
+
+#### Environmet variables
+
+
+__MAZEHALL_PROXY_PORT__
+- the proxy port to listen on for incoming proxy requests (default: `8080`)
+
 ---------------------------------------
-#### MAZEHALL_PROXY_PORT
+__MAZEHALL_SOCKET_NS__
+- namespace to be used for the websocket registration connection (default: `/proxy`)
+
 ---------------------------------------
-#### MAZEHALL_SOCKET_NS
----------------------------------------
-#### MAZEHALL_SOCKET_PORT
+__MAZEHALL_SOCKET_PORT__
+- websocket server port (default: `3300`)
+
 ---------------------------------------
 
 
-#### MazehallProxy.Client(server, hosts)
+### MazehallProxy.Client(server, hosts)
 
 This is the Client constructor. Creates a new Proxy-Client and starts listening to
-the server start event. If triggered then it starts a websocket client and registers 
+the server start event. If triggered then it starts a websocket client and registers
 the public addresses and server port.
 
 __Arguments__
 
+`server` - {Object} a http instance
+
+`hosts` - {String|Array} Hosts url
+
+Example
+
 ```javascript
-    server, {Object} a http instance
-    hosts {String|Array} Hosts url
+process.env.MAZEHALL_PROXY_MASTER = "ws://" + config.proxy.ws.master + ":" + config.proxy.ws.port + "/proxy"
+var proxy = MhProxy.Client(server, config.proxy.hosts);
 ```
 
----------------------------------------
+#### Environmet variables
+
 MAZEHALL_PROXY_MASTER
+- websocket connection string
+  default: `ws://localhost:3300/proxy`
+
 ---------------------------------------
 
 
@@ -97,4 +115,3 @@ MAZEHALL_PROXY_MASTER
 * fix websockets in balancing scenarios
 
 [redbird]: https://github.com/OptimalBits/redbird
-

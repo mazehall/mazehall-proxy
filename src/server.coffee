@@ -29,14 +29,14 @@ msgValidation = (msg) ->
   @return Kefir.Observable
 ###
 unregisterListener = (socket, proxy) ->
-  _r.fromEvent socket, 'disconnect'
+  _r.fromEvents socket, 'disconnect'
   .onValue () ->
     socket.mazehallProxy = socket.mazehallProxy || []
     proxy.unregister item.target, item.backend for item in socket.mazehallProxy
 
 
 registerListener = (socket, proxy) ->
-  _r.fromEvent socket, wsEvents.REGISTER
+  _r.fromEvents socket, wsEvents.REGISTER
   .filter()
   .valuesToErrors (msg) ->
     validation = msgValidation msg
@@ -104,7 +104,7 @@ class MazehallProxy
 
 
   connectionListener: (ns) ->
-    @sockets_ = _r.fromEvent(ns, 'connection')
+    @sockets_ = _r.fromEvents(ns, 'connection')
     .onValue (socket) ->
       socket.emit wsEvents.HELLO
 
