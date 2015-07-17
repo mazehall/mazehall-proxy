@@ -1,20 +1,25 @@
 _r = require 'kefir'
+io = require 'socket.io-client'
 EVENTS = require './events'
 
 ProxyClient = (server, hosts) ->
-  _r.fromEvents server, 'listening'
-  .onValue ->
-    io = require 'socket.io-client'
-    socket = io.connect process.env.MAZEHALL_PROXY_MASTER || 'ws://localhost:3300/proxy'
-    socket.on 'connect', ->
-      @log 'mazehall-proxy socket connected'
-    socket.on EVENTS.HELLO, ->
-      mazehallGridRegister server, socket, hosts
-    socket.on EVENTS.MESSAGE, (x) ->
-      @log 'message: ' + x
-    socket.on EVENTS.ERROR, (err) ->
-      logStream_.error err
+  server.on 'listening', ->
+    bindSocketSubscriber server, hosts
+  @
 
+bindSocketSubscriber = (server, hosts) ->
+  socket = io.connect process.env.MAZEHALL_PROXY_MASTER || 'ws://localhost:3300/proxy'
+  socket.on EVENTS.HELLO, ->
+    mazehallGridRegister server, socket, hosts
+  socket.on EVENTS.MESSAGE, (x) ->
+    console.log 'proxy-message: ' + x
+  socket.on EVENTS.ERROR, (err) ->
+    console.error err
+  socket.on 'connect_timeout', ->
+    console.log 'proxy-connection: timeout'
+  socket.on 'reconnect_failed', ->
+    console.log 'proxy-connection: couldn’t reconnect within reconnectionAttempts'
+  return
 
 module.exports = ProxyClient
 
